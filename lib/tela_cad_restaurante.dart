@@ -1,30 +1,48 @@
-import 'package:flutter/material.dart';
+'import 'package:flutter/material.dart';
 import 'package:flutter/';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:untitled/Restaurante.dart';
+import 'package:untitled/Tipo.dart';
 
 
-class TelaCadRestaurante extends StateFulWidget {
+class TelaCadRestaurante extends StatelessWidget {
   TelaCadRestaurante({super.key});
 
-  @override
-  State<StatefulWidget> createState() {
-    return TelaCadRestaurante();
+     @override
+     State<StatefulWidget> createState(){
+        return TelaCadRestaurante();
+
+     }
   }
-}
-class TelaCadRestauranteState extends State<TelaCadRestaurante>{
 
-  final TextEditingController nomeController = TextEditingController();
-  final TextEditingController latitudeController = TextEditingController();
-  final TextEditingController longitudeController = TextEditingController();
-  String? culinariaSelecionada;
+  class TelaCadRestauranteState extends State<TelaCadRestaurante>{
 
-  List<Tipo> tipo
-}
+    final TextEditingController nomeController = TextEditingController();
+    final TextEditingController latitudeController = TextEditingController();
+    final TextEditingController longitudeController = TextEditingController();
+    String? culinariaSelecionada;
 
+    List<Tipo> tipoCulinaria = [];
+    int? tipoCulinaria;
 
+    void initState(){
+      super.initState();
+      carregarTipos();
+    }
+
+    Future<void> carregarTipos()async{
+      final lista = await tipo_DAO.listarTipos();
+      setState(() {
+        tipoCulinaria = lista;
+      });
+    }
+
+    @override
+  Widget build(BuildContext){
   return Scaffold(
     appBar: AppBar(title: const Text('Cadastro de Restaurante')),
-    body Padding: const EdgeInsets.all(24),
+    body: Padding(padding:const EdgeInsets.all(24),
     child: Column(
        mainAxisAlignment: MainAxisAlignment.center,
        children: [
@@ -35,38 +53,31 @@ class TelaCadRestauranteState extends State<TelaCadRestaurante>{
             value: culinariaSelecionada,
             items: tipoCulinaria.map((tipo){
               return DropdownMenu<String>(
-                 value:tipo.descricao,
-                 child: text ("${tipo.descricao}"),
+                 value:tipo.nome,
+                 child: text ("${tipo.nome}"),
               );
             }).tolist(),
             onChanged: (String? novaCulinaria) {
-              culinariaselecionada = value;
-}
+              setState(() {
+                culinariaSelecionada = novaCulinaria;
+                Tipo tipoSelecionado = tipoCulinaria.firstwere(
+                 (tipo) => tipo.nome == novaCulinaria,
+                );
+                tipoCulinaria = tipoSelecionado.codigo;
+              });
+            }),
+
+               TextFormField(
+                decoration: const InputDecoration(
+                   hintText: 'Nome do Restaurante'),
+                   validator: (String? value){
+
+},controller: nomeController,
 ),
-
-TextFormField(
-   decoration: const InputDecoration(hintText:'Nome do restaurante'),
-)
-
-]
-
-
-)
-
-)
-
-
-
-
-
-
-
-
-
-
-
-
-
+TextField(
+   decoration: const InputDecoration(hintText: 'Latitude'),
+   validator: (String? value) {
+     controller: latitudeController,
 
 TextFormField(
        decoration:const InputDecoration(hintText: 'Latitude'),
@@ -80,17 +91,7 @@ TextFormField(
 ),    //TextFormField
       SizedBox
 
-
-
-
-
-
-
-
 vali
-
-
-
 
 onPressed: () async{
 final sucesso = await RestauranteDAO.cadastrarRestaurante(
